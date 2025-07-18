@@ -1,8 +1,13 @@
 import Link from "next/link";
+import { todoList } from "../components/TodoLists";
 
-async function getNote({ params }: { params: { slug: string } }) {
+type Props = {
+  params: { slug: string; lang: "en" | "id" };
+};
+
+async function getNote(slug:string ) {
   const res = await fetch(
-    `https://jsonplaceholder.typicode.com/todos/${params.slug}`
+    `https://jsonplaceholder.typicode.com/todos/${slug}`
   );
   if (!res.ok) {
     throw new Error("Failed to fetch data");
@@ -10,8 +15,8 @@ async function getNote({ params }: { params: { slug: string } }) {
   return res.json();
 }
 
-export default async function page({ params }: { params: { slug: string } }) {
-  const note = await getNote({ params });
+export default async function page({ params }:  Props) {
+  const note:todoList = await getNote(params.slug);
 
   console.log(note);
   return (

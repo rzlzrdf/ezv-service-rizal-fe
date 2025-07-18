@@ -21,14 +21,15 @@ const NewTodo: React.FC = () => {
 
   const handleAddTodo = async () => {
     try {
-      // await createTodo({
-      //   title: newTodo,
-      //   completed: false,
-      //   userId: 1,
-      // } as todoList).unwrap();
+      await createTodo({
+        title: newTodo,
+        completed: false,
+        userId: 1,
+      } as todoList).unwrap();
       toast("Todo added successfully!");
       setNewTodo("");
-    } catch (error) {
+    } catch (e) {
+      console.error("Failed to add todo:", e);
       toast.error("Something went wrong while adding todo");
     }
   };
@@ -53,7 +54,7 @@ const NewTodo: React.FC = () => {
         </Button>
       </div>
       {createError && (
-        <p className="text-red-500 text-sm">Error: "Failed to add todo"</p>
+        <p className="text-red-500 text-sm">Failed to add todo</p>
       )}
     </div>
   );

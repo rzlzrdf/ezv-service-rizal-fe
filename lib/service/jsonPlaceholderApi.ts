@@ -1,3 +1,4 @@
+import { todoList } from "@/app/components/TodoLists";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const jsonPlaceholderApi = createApi({
@@ -7,7 +8,7 @@ export const jsonPlaceholderApi = createApi({
   }),
   tagTypes: ["Todos"],
   endpoints: (builder) => ({
-    getTodos: builder.query<any[], { _page: number; _limit: number }>({
+    getTodos: builder.query<todoList[], { _page: number; _limit: number }>({
       query: ({ _page, _limit }) => `todos?_page=${_page}&_limit=${_limit}`,
       providesTags: (result) =>
         result

@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { useEditTodoMutation } from "@/lib/service/jsonPlaceholderApi";
+// import { useEditTodoMutation } from "@/lib/service/jsonPlaceholderApi";
 import Link from "next/link";
 
 type Props = {
@@ -16,19 +16,20 @@ type Props = {
 
 const TodoItem = ({ item }: Props) => {
   const [checked, setChecked] = useState<boolean>(item.completed);
-  const [editTodo] =
-    useEditTodoMutation();
+  //   const [editTodo] =
+  //     useEditTodoMutation();
 
   const handleCheckTodo = async (checked: boolean) => {
     try {
-      await editTodo({
-        title: item.title,
-        completed: checked,
-        userId: item.userId,
-      } as todoList).unwrap();
+      //   await editTodo({
+      //     title: item.title,
+      //     completed: checked,
+      //     userId: item.userId,
+      //   } as todoList).unwrap();
       toast("Todo changed successfully!");
       setChecked(checked); // Toggle checked state
     } catch (error) {
+      console.error("Failed to change todo:", error);
       toast.error("Something went wrong while changing todo");
     }
   };
@@ -39,7 +40,9 @@ const TodoItem = ({ item }: Props) => {
           checked={checked}
           onCheckedChange={(e) => handleCheckTodo(!!e)}
         />
-        <Link href={`/${item.id}`} className={cn(checked && "line-through")}>{item.title}</Link>
+        <Link href={`/${item.id}`} className={cn(checked && "line-through")}>
+          {item.title}
+        </Link>
       </div>
       <Button variant={"ghost"} size={"icon"} className="hover:bg-yellow-300">
         <Edit className="cursor-pointer" size={"14"} />

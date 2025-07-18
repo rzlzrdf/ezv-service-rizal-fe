@@ -11,7 +11,6 @@ import {
   PaginationContent,
   PaginationEllipsis,
   PaginationItem,
-  PaginationLink,
 } from "@/components/ui/pagination";
 import { useGetTodosQuery } from "@/lib/service/jsonPlaceholderApi";
 import { ChevronLeft, ChevronRight, Loader } from "lucide-react";
@@ -20,8 +19,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/lib/store/store";
 import { setPage, setRow } from "@/lib/features/todoSlice";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { Checkbox } from "@/components/ui/checkbox";
 import TodoItem from "./TodoItem";
 
 export interface todoList {
