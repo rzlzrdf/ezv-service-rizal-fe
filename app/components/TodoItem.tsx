@@ -40,7 +40,7 @@ const TodoItem = ({ item }: Props) => {
           checked={checked}
           onCheckedChange={(e) => handleCheckTodo(!!e)}
         />
-        <Link href={`/${item.id}`} className={cn(checked && "line-through")}>
+        <Link href={`/todo/${item.id}`} className={cn(checked && "line-through")}>
           {item.title}
         </Link>
       </div>
