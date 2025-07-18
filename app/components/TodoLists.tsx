@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/pagination";
 import { useGetTodosQuery } from "@/lib/service/jsonPlaceholderApi";
 import { ChevronLeft, ChevronRight, Loader } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/lib/store/store";
 import { setPage, setRow } from "@/lib/features/todoSlice";
@@ -29,6 +29,7 @@ export interface todoList {
 }
 
 const TodoList = () => {
+  const [startPage, setStartPage] = useState<number>(1);
   const { page, row } = useSelector((state: RootState) => state.todoSlice);
   const dispatch = useDispatch();
   const { data, isLoading, error, isFetching } = useGetTodosQuery({
@@ -37,7 +38,28 @@ const TodoList = () => {
   });
 
   const maxTodo = 200;
-  const pager = maxTodo / row;
+  const items = row || 10; // Default to 10 if row is not set
+  const totalPages = Math.ceil(maxTodo / items);
+  const windowSize = 4;
+
+  const handleNextWindow = () => {
+    const nextStart = startPage + windowSize;
+    if (nextStart <= totalPages) {
+      setStartPage(nextStart);
+    }
+  };
+
+  const handlePrevWindow = () => {
+    const prevStart = startPage - windowSize;
+    if (prevStart >= 1) {
+      setStartPage(prevStart);
+    }
+  };
+
+  const visiblePages = Array.from(
+    { length: Math.min(windowSize, totalPages - startPage + 1) },
+    (_, i) => startPage + i
+  );
 
   if (isLoading)
     return (
@@ -87,31 +109,34 @@ const TodoList = () => {
         <div className="h-[50px] w-full md:w-1/2 flex items-center">
           <Pagination>
             <PaginationContent>
-              <PaginationItem>
+              <PaginationItem onClick={handlePrevWindow}>
                 <ChevronLeft />
               </PaginationItem>
-              {Array.from({ length: pager }).map(
-                (_page, index: number) =>
-                  index < 4 && (
-                    <PaginationItem key={index} className="cursor-pointer">
-                      {/* <PaginationLink href={`?page=${index + 1}`}>
-                        {index + 1}
-                      </PaginationLink> */}
-                      <Button
-                        size={"icon"}
-                        variant={"outline"}
-                        className="cursor-pointer bg-transparent hover:bg-yellow-200"
-                        onClick={() => dispatch(setPage(index + 1))}
-                      >
-                        {index + 1}
-                      </Button>
-                    </PaginationItem>
-                  )
+              {visiblePages.map((pageNum) => (
+                <PaginationItem key={pageNum}>
+                  <Button
+                    size="icon"
+                    variant="outline"
+                    className={`cursor-pointer bg-transparent hover:bg-yellow-200 ${
+                      pageNum === page
+                        ? "bg-yellow-400 text-black font-bold border-yellow-500"
+                        : ""
+                    }`}
+                    onClick={() => dispatch(setPage(pageNum))}
+                  >
+                    {pageNum}
+                  </Button>
+                </PaginationItem>
+              ))}
+              {startPage + windowSize <= totalPages && (
+                <PaginationItem>
+                  <PaginationEllipsis
+                    onClick={handleNextWindow}
+                    className="cursor-pointer"
+                  />
+                </PaginationItem>
               )}
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-              <PaginationItem>
+              <PaginationItem onClick={handleNextWindow}>
                 <ChevronRight />
               </PaginationItem>
             </PaginationContent>
