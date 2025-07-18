@@ -22,6 +22,7 @@ import { setPage, setRow } from "@/lib/features/todoSlice";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
+import TodoItem from "./TodoItem";
 
 export interface todoList {
   userId: number;
@@ -63,15 +64,7 @@ const TodoList = () => {
           </div>
         ) : data ? (
           data.map((item: todoList, key: React.Key) => (
-            <div
-              className="text-base px-3 pt-1 pb-2 border-b line-clamp-1 border-yellow-500 hover:bg-yellow-200 duration-300 flex gap-2 items-center"
-              key={key}
-            >
-              <Checkbox checked={item.completed} onCheckedChange={(e)=>console.log(!!e)} />
-              <p className={cn(item.completed && "line-through")}>
-                {item.title}
-              </p>
-            </div>
+            <TodoItem item={item} key={key} />
           ))
         ) : (
           <>No Data</>
@@ -103,12 +96,14 @@ const TodoList = () => {
               {Array.from({ length: pager }).map(
                 (_page, index: number) =>
                   index < 4 && (
-                    <PaginationItem key={index}>
+                    <PaginationItem key={index} className="cursor-pointer">
                       {/* <PaginationLink href={`?page=${index + 1}`}>
                         {index + 1}
                       </PaginationLink> */}
                       <Button
                         size={"icon"}
+                        variant={"outline"}
+                        className="cursor-pointer bg-transparent hover:bg-yellow-200"
                         onClick={() => dispatch(setPage(index + 1))}
                       >
                         {index + 1}
